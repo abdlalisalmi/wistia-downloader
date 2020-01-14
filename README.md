@@ -2,6 +2,7 @@
 Python script to download from wistia player
 
 ## How to use
+
 ### step 1: (Cloning the script)
 >git clone https://github.com/salmiabdlali/wistia-downloader.git</br>
 >cd wistia-downloader</br>
@@ -11,3 +12,8 @@ Python script to download from wistia player
 ![](https://i.imgur.com/tsfAbAD.png)
 ### step 4: (Execute the script)
 >python3 wistia-downloader.py</br>
+
+## Created by 
+
+[Abdelaali es salmi](https://github.com/salmiabdlali) &
+[Amine tahiri](https://github.com/aminetahiri1998)

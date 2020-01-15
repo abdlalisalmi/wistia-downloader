@@ -61,7 +61,7 @@ def download_folder():
 		os.system("open {}".format(folder_path))
 	except FileNotFoundError:
 		print("\033[1;31;40mThe PATH does not exist !! try again\033[0;37;40m")
-		time.sleep(3.5)
+		sprint(".....", 100)
 		main()
 
 
@@ -72,6 +72,11 @@ def main():
 	url = "http://fast.wistia.net/embed/iframe/"
 	i = 0
 	with open("video_ID.txt", "r+") as video_id:
+		if os.stat("video_ID.txt").st_size == 0:
+			print("")
+			sprint("\033[1;31;40mThe file video_ID.txt is empty !!\033[0;37;40m", 0.2)
+			sprint(".....", 100)
+			main()
 		for id in video_id:
 			os.system("curl -O {}".format(url + id))
 			print("Video " + str(i + 1) + "--------------------------------------------------------------------------")

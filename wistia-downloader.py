@@ -2,10 +2,7 @@
 import os
 import time
 import sys
-color_green = "\033[1;32;40m"
-color_originale = "\033[0;37;40m"
-color_yellow = "\033[1;33;40m"
-color_red = "\033[1;31;40m"
+
 video_index = 1
 def logo():
 	sprint("""\033[1;33;40m
@@ -28,18 +25,25 @@ def sprint(string, tm=10):
 def html_page_handle_and_download(file_name):
 	print("\033[1;32;40m")
 	global video_index
-	with open(file_name, "r+") as file:
+	with open(file_name, "r") as file:
 		i = 1
 		for con in file:
+			# ERROR
+			if i== 1 and con == '{"error":true,"iframe":true}':
+				video_url = con
 			if i == 63:
 				video_url = con
+				break
 			i+=1
-		new_video_url = video_url.split("url")[1].split(',')[0].split('"')[2]
-		os.system("curl -O {}".format(new_video_url))
-		video_name = video_url.split("url")[1].split(',')[0].split('"')[2].split("/")[4]
-		video_name_and_index = "Video " + str(video_index) + ".mp4"
-		video_index += 1
-		os.rename(video_name, video_name_and_index)
+		if video_url == '{"error":true,"iframe":true}':
+			sprint("\033[1;31;40mYour video id is not valid\033[0;37;40m", 2)
+		else:
+			new_video_url = video_url.split("url")[1].split(',')[0].split('"')[2]
+			os.system("curl -O {}".format(new_video_url))
+			video_name = video_url.split("url")[1].split(',')[0].split('"')[2].split("/")[4]
+			video_name_and_index = "Video " + str(video_index) + ".mp4"
+			video_index += 1
+			os.rename(video_name, video_name_and_index)
 		os.system("rm -rf {}".format(file_name))
 	print("\033[0;37;40m")
 
@@ -79,8 +83,8 @@ def main():
 			main()
 		for id in video_id:
 			os.system("curl -O {}".format(url + id))
-			print("Video " + str(i + 1) + "--------------------------------------------------------------------------")
-			html_page_handle_and_download(id[:-1])
+			print("Video ID " + str(i + 1) + "--------------------------------------------------------------------------")
+			html_page_handle_and_download(id.rstrip())
 			print("-----------------------------------------------------------------------------------")
 			i+=1 
 

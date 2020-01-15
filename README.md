@@ -1,6 +1,11 @@
 # Wistia Downloader
 Python script to download from wistia player
 
+## Requirements
+to run the program without problems you have to make sure you have this things in your machine
+> - python3
+> - curl command
+
 ## How to use
 
 ### step 1: (Cloning the script)

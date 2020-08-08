@@ -6,6 +6,11 @@ to run the program without problems you have to make sure you have this things i
 > - python3
 > - requests
 
+## Features:
+- Download all video Automatique
+- Download progress
+- Choice the video resolution (soon)
+
 ## How to use
 
 ### step 1: (Install requests)

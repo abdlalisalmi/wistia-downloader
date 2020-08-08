@@ -8,8 +8,8 @@ to run the program without problems you have to make sure you have this things i
 
 ## Features:
 - Download all video Automatique
-- Download progress
-- Choice the video resolution (soon)
+- You can see the download progress
+- You can choose the video resolution
 
 ## How to use
 

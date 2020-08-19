@@ -7,8 +7,6 @@ import getpass
 from shutil import copy
 from clint.textui import progress  # for the progress effects
 
-# /home/abdlali/Desktop/wistia-downloader
-
 video_index = 1
 
 

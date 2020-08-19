@@ -3,9 +3,11 @@ Python script/GUIApp to download from wistia hosted videos
 
 ## Requirements
 to run the program without problems you have to make sure you have this things in your machine.
+
 for the script you just need :
 > - python3
 > - requests
+
 for run the GUIApp you need :
 > - python3
 > - requests

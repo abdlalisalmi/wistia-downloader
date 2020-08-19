@@ -45,8 +45,8 @@ In addition, for Fedora users, use the following command:
 ### step 3: (Grabbing the videos id)
 ![](https://media.giphy.com/media/YkJhH3iHcuXNaeRBCR/giphy.gif)
 
-### step 4: (adding IDs in video_ID.txt)
-![](https://i.imgur.com/tsfAbAD.png)
+### step 4: (adding the IDs)
+for the script you need to add the IDs in  video_ID.txt file, but in the GUIApp you will find the IDs input filed.
 
 ### step 5: (Execute the script/GUIApp)
 

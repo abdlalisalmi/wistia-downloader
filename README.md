@@ -22,6 +22,7 @@ If you are using a Python from any current python.org Python installer for macOS
 ### Linux:
 Actually, you just need to use the following to install the tkinter
 >sudo apt-get install python3-tk
+
 In addition, for Fedora users, use the following command:
 >sudo dnf install python3-tkinter
 

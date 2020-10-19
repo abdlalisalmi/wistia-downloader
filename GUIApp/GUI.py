@@ -3,6 +3,8 @@ from tkinter import messagebox
 from tkinter.ttk import Combobox
 from tkinter import filedialog
 from tkinter.ttk import Progressbar
+import webbrowser
+
 
 import os
 import sys
@@ -24,18 +26,21 @@ class WistiaDownloaderGUI():
         self.btnBorderX = int(self.screen_width / 2.5)
         self.btnBorderY = int(self.screen_height / 5)
 
+        self.videos  = []
+
         self.IDsList = []
         self.resolution = "224p"
         self.downloadFolder = None
 
         self.showLogo()
         self.showTextInput()
-        self.showExportandImmport()
+        self.showImmport()
         self.showResolutionSelect()
         self.showDownloadFolderSelect()
         self.showDownloadBtn()
         self.showLogs()
         self.showProgressBar()
+        self.showHelpBtn()
         self.showQuitBtn()
 
     def showLogo(self):
@@ -44,32 +49,7 @@ class WistiaDownloaderGUI():
         Label(self.master, text="https://github.com/abdlalisalmi",
               fg='#786fa6', font=("Arial Bold", 10)).place(x=int(self.screen_width/3.6) + 5, y=55)
 
-    def showExportandImmport(self):
-        # Exporting the IDs in a file
-        def exportIDsToFile():
-            self.dataCollection()
-            if self.IDsList:
-                exportedFile = filedialog.asksaveasfile(
-                    mode='w', defaultextension=".txt")
-                if exportedFile:
-                    for ID in self.IDsList:
-                        exportedFile.write('{}\n'.format(ID))
-                    Label(self.master, text='PATH: {}'.format(exportedFile.name),
-                          fg='#2c3e50', font=("Arial Bold", 7)).place(x=self.borderX - 5, y=465)
-                    exportedFile.close()
-
-                    messagebox.showinfo("Wistia Downloader",
-                                        "You IDs is exported.")
-            else:
-                messagebox.showinfo("Wistia Downloader",
-                                    "You IDs field is empty.")
-        Button(
-            self.master, font=("Arial Bold", 8), fg="white",
-            bg='#575fcf', text="Export",
-            command=exportIDsToFile
-        ).place(x=self.borderX + 120, y=430)
-        ################################
-
+    def showImmport(self):
         # Importing the IDs from a file
         def importIDsFromFile():
             filePATH = filedialog.askopenfilename(
@@ -79,33 +59,38 @@ class WistiaDownloaderGUI():
             )
             if filePATH:
                 with open(filePATH, 'r') as f:
+
                     content = f.read().split('\n')
                     content = list(filter(None, content))
+                    self.video_data_handle(content)
+
+                    i = 1
                     str_content = ""
-                    for id in content:
-                        str_content += id + '\n'
+                    for video in self.videos:
+                        str_content += '{}-{}'.format(i, video['name']) + '\n'
+                        i = i + 1
+                    self.textArea.config(state=NORMAL)
                     self.textArea.insert(END, str_content)
+                    self.textArea.config(state=DISABLED)
 
         Button(
             self.master, font=("Arial Bold", 8),
-            fg="white", bg='#575fcf',
+            fg="white", bg='#5799cf',
             text="Import", command=importIDsFromFile
-        ).place(x=self.borderX + 20, y=430)
+        ).place(x=self.borderX + 130, y=122)
 
     def showTextInput(self):
 
         self.showBorder(self.borderX, self.btnBorderY+10, width=25, height=2)
 
-        self.textInputLable = Label(self.master, text="Enter The IDs:",
+        self.textInputLable = Label(self.master, text="Import Videos IDs File:",
                                     fg='#303952', font=("Arial Bold", 10))
         self.textInputLable.place(x=self.borderX, y=self.btnBorderY)
 
         self.textArea = Text(self.master, bg='#dff9fb', borderwidth=2, height=19,
                              width=25, font=("Arial Bold", 9))
-        self.textArea.place(x=self.borderX, y=130)
-        self.textArea.focus()
-        self.textArea.insert(
-            END, "cu1xdspoew")
+        self.textArea.place(x=self.borderX, y=160)
+        self.textArea.config(state=DISABLED)
 
     def showBorder(self, x, y, height=2, width=48):
         Label(self.master,
@@ -188,23 +173,29 @@ class WistiaDownloaderGUI():
                            text="QUIT", fg="white", bg='#ff3f34',
                            command=frame.quit)
         self.quit.grid(row=0, column=0)
+    
+    def showHelpBtn(self):
+        def openweb():
+            url = 'https://github.com/abdlalisalmi/wistia-downloader/blob/master/README.md'
+            webbrowser.open(url)
+
+        frame = Frame(self.master)
+        frame.place(x=int(self.screen_width - (self.borderX * 4)),
+                    y=int(self.screen_height - (self.borderX * 1.2)))
+        self.quit = Button(frame,
+                           text="Help", fg="white", bg='#ff793f',
+                           command=openweb)
+        self.quit.grid(row=0, column=0)
 
 # the function called when we click on Start Download button
     def download(self):
         self.downloadBtn['state'] = DISABLED
-        self.dataCollection()
         core = WistiaDownloaderCore(
-            self.master, self.IDsList,
+            self.master, self.videos,
             self.resolution, self.downloadFolder,
             self.btnBorderX, self.btnBorderY,
         )
         self.downloadBtn['state'] = NORMAL
-
-# When we click on download btn or export btn,
-# this function well be called for collect the IDs and convert them to a list
-    def dataCollection(self):
-        self.IDsList = self.textArea.get("1.0", "end").split('\n')
-        self.IDsList = list(filter(None, self.IDsList))
 
     def showProgressBar(self):
         self.progressBar = Progressbar(self.master, length=300)
@@ -229,3 +220,14 @@ class WistiaDownloaderGUI():
                               width=52, font=("Arial Bold", 8))
         self.logsField.place(x=self.btnBorderX + 10, y=self.btnBorderY + 265)
         self.logsField.config(state=DISABLED)
+
+    def video_data_handle(self, content):
+        try:
+            for line in content:
+                line = line.split('<p>')[2]
+                video_id = line.split('"')[1].split('=')[1]
+                video_name = line.split('>')[1].split('<')[0]
+                self.videos.append({'id': video_id, 'name': video_name})
+        except:
+            messagebox.showinfo(
+                "Wistia Downloader", "You Need To Enter a Valid Videos File IDs.")

@@ -10,9 +10,9 @@ from shutil import copy
 
 
 class WistiaDownloaderCore():
-    def __init__(self, master, IDsList, resolution, downloadFolder, btnBorderX, btnBorderY):
+    def __init__(self, master, videos, resolution, downloadFolder, btnBorderX, btnBorderY):
         self.master = master
-        self.IDsList = IDsList
+        self.videos = videos
         self.resolution = resolution
         self.resolution_list = ["224p", "360p", "540p", "720p", "Best Quality"]
         self.downloadFolder = downloadFolder
@@ -24,10 +24,10 @@ class WistiaDownloaderCore():
         self.btnBorderY = btnBorderY
 
         if self.dataCheck():
-            for ID in self.IDsList:
-                videoURL = self.URL + ID
+            for video in self.videos:
+                videoURL = self.URL + video.get('id')
                 html_file = self.download_HTML_file(videoURL)
-                self.html_page_handle_and_download(html_file, self.resolution)
+                self.html_page_handle_and_download(html_file, self.resolution, video.get('name'))
             try:
                 self.downloadLable.configure(text='Download Completed')
             except:
@@ -36,7 +36,7 @@ class WistiaDownloaderCore():
                 "Wistia Downloader", "Download completed, check logs for any error.")
 
     def dataCheck(self):
-        if not self.IDsList:
+        if not self.videos:
             messagebox.showinfo(
                 "Wistia Downloader", "You need to enter at least one ID.")
             return 0
@@ -59,7 +59,7 @@ class WistiaDownloaderCore():
                     f.write(chunk)
         return local_filename
 
-    def html_page_handle_and_download(self, file_name, resolution):
+    def html_page_handle_and_download(self, file_name, resolution, viedo_name):
         with open(file_name, "r") as file:
             i = 1
             for con in file:
@@ -71,7 +71,8 @@ class WistiaDownloaderCore():
                     break
                 i += 1
             if video_data == '{"error":true,"iframe":true}':
-                self.logs += 'ID number {}, is not valid.\n'.format(
+                self.logs += '{} ID {}, is not valid.\n'.format(
+                    viedo_name,
                     self.videoIndex)
                 self.showLogs(self.logs)
                 self.videoIndex += 1
@@ -88,24 +89,24 @@ class WistiaDownloaderCore():
 
                 self.showProgressBar()
                 self.downloadLable.configure(
-                    text='Downloading Video {}...'.format(self.videoIndex))
+                    text='{} is Downloading...'.format(viedo_name))
 
                 if (video_url):
-                    video_name = self.download_video(video_url)
+                    video_file_name = self.download_video(video_url)
 
-                    video_name_and_index = "Video{}.mp4".format(
-                        str(self.videoIndex))
+                    video_name_and_index = "{}-{}".format(
+                        str(self.videoIndex), viedo_name)
                     self.videoIndex += 1
-                    os.rename(video_name, video_name_and_index)
+                    os.rename(video_file_name, video_name_and_index)
                 else:
                     video_url = json.loads(video_data_list[0])['url']
                     print(json.loads(video_data_list[0]))
-                    video_name = self.download_video(video_url)
+                    video_file_name = self.download_video(video_url)
 
-                    video_name_and_index = "Video{}.mp4".format(
-                        str(self.videoIndex))
+                    video_name_and_index = "{}-{}".format(
+                        str(self.videoIndex), viedo_name)
                     self.videoIndex += 1
-                    os.rename(video_name, video_name_and_index)
+                    os.rename(video_file_name, video_name_and_index)
 
         os.remove(file_name)
 
@@ -133,7 +134,7 @@ class WistiaDownloaderCore():
         self.progressBar['value'] = 0
 
         self.downloadLable = Label(self.master, text="Downloading...",
-                                   fg='#2c3e50', font=("Arial Bold", 10))
+                                   fg='#2c3e50', font=("Arial Bold", 9))
         self.downloadLable.place(
             x=self.btnBorderX + 10, y=self.btnBorderY + 187)
 

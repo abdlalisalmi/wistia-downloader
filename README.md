@@ -30,9 +30,10 @@ In addition, for Fedora users, use the following command:
 <img align="center" alt="Python" width="512px" src="https://i.imgur.com/P4kpFQS.png" />
 
 ## Features:
-- Download all video Automatique
-- You can see the download progress
-- You can choose the video resolution
+- Download all video Automatique.
+- The videos will be named with the original name.
+- You can see the download progress.
+- You can choose the video resolution.
 
 ## How to use
 

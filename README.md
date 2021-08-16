@@ -63,3 +63,5 @@ for the script you need to add the IDs in  video_ID.txt file, but in the GUIApp 
 
 [Abdelaali es salmi](https://github.com/salmiabdlali) &
 [Amine tahiri](https://github.com/aminetahiri1998)
+
+<a href="https://www.buymeacoffee.com/abdlalisalmi" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" width="160px" ></a>
